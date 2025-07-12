@@ -44,9 +44,10 @@ public class ProductServiceImpl implements ProductService{
         .price(product.getPrice())
         .build();
 
+        if(productImage!=null) {
         String imageStr=productImage.getFileName();
         productDTO.setUploadFileNames(List.of(imageStr));
-
+        }
         return productDTO;
         }).collect(Collectors.toList()); // map() 같은 중간 연산으로 처리한 스트림(데이터 흐름)을 다시 List 자료구조로 변환하는 최종 연산이에요.
         long totalCount=result.getTotalElements();

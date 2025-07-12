@@ -44,6 +44,15 @@ public class TodoController {
     {
         log.info("TodoDTO: "+todoDto);
         Long tno=service.register(todoDto);
+
+        try {
+            Thread.sleep(2000);
+
+        }catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
         return Map.of("TNO",tno);
     }
 

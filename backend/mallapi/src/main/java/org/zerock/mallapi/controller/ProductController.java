@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,8 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
     private final CustomFileUtil fileUtil;
     private final ProductService productService;
-    @PostMapping("/")
-    public Map<String,Long> register (ProductDTO productDTO) {
+    @PostMapping(value="/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Map<String,Long> register (@ModelAttribute ProductDTO productDTO) {
         log.info("register: "+productDTO);
         List<MultipartFile>files=productDTO.getFiles(); // 빈 객체여도 getFile해도 오류가 안난다!!
         List<String> uploadFileNames=fileUtil.saveFiles(files); // STRING으로 저장하는게 DB에 저장하기 유리하다.
@@ -62,8 +64,8 @@ public class ProductController {
         return productService.get(pno);
     }
 
-    @PutMapping("/{pno}")
-    public Map<String,String> modify(@PathVariable(name="pno")Long pno,ProductDTO productDTO)
+    @PutMapping(value="/{pno}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Map<String,String> modify(@PathVariable(name="pno")Long pno, @ModelAttribute ProductDTO productDTO)
     {
         productDTO.setPno(pno);
         ProductDTO oldProductDTO=productService.get(pno);

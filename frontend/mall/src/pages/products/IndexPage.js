@@ -25,3 +25,8 @@ const IndexPage=() => {
     );
 }
 export default IndexPage;
+
+// outlet은    path:"products",
+        //element:<Suspense fallback={Loading}><ProductsIndex/></Suspense>,
+        //children:productsRouter() 의 children의 자식 요소들을 전부 가져옴
+        // 여기선 라우터를 outlet으로 설정하엿다, 즉, 라우터는 거쳐가는역할, 라우터의add,list 페이지에 접근하기 위함
