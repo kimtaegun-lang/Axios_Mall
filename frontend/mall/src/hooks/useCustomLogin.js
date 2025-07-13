@@ -1,20 +1,36 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, createSearchParams } from "react-router-dom";
 import { loginPostAsync, logout } from "../slices/loginSlice";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import signinState from "../api/atoms/signinState";
+import { loginPost } from "../api/memberApi";
+import { removeCookie, setCookie } from "../util/cookieUtil";
 
 const useCustomLogin = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const loginState = useSelector(state => state.loginSlice); // 로그인 상태 
+    /* const loginState = useSelector(state => state.loginSlice); // 로그인 상태 */
+    
+
+    const [loginState, setLoginState] = useRecoilState(signinState)
     const isLogin = loginState.email ? true : false; // 로그인 여부 
+    const resetState = useResetRecoilState(signinState)
+
 
     const doLogin = async (loginParam) => { // 로그인 함수
-        const action = await dispatch(loginPostAsync(loginParam));
-        return action.payload;
+        /*  const action = await dispatch(loginPostAsync(loginParam));
+          return action.payload; */
+        const result = await loginPost(loginParam);
+        console.log(result);
+
+        saveAsCookie(result);
+        return result;
     };
 
     const doLogout = () => { // 로그아웃 함수
-        dispatch(logout());
+       // dispatch(logout());
+       removeCookie('member') 
+       resetState()
     };
 
     const moveToPath = (path) => { // 페이지 이동
@@ -27,6 +43,10 @@ const useCustomLogin = () => {
 
     const moveToLoginReturn = () => { // 로그인 페이지로 이동 컴포넌트
         return <Navigate replace to="/member/login" />;
+    };
+    const saveAsCookie = (data) => {
+        setCookie("member", JSON.stringify(data), 1); // 1일 동안 쿠키 저장
+        setLoginState(data);
     };
 
     const exceptionHandle = (ex) => {
@@ -48,7 +68,7 @@ const useCustomLogin = () => {
         }
     }
     return {
-        loginState, isLogin, doLogin, doLogout, moveToPath, moveToLogin,
+        loginState, isLogin, doLogin, doLogout,saveAsCookie, moveToPath, moveToLogin,
         moveToLoginReturn, exceptionHandle
     }
 

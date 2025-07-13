@@ -3,17 +3,23 @@ import { postAdd } from "../../api/productsApi";
 import FetchingModal from "../common/FetchingModal";
 import ResultModal from "../common/ResultModal";
 import useCustomMove from "../../hooks/useCustomMove";
+import { useMutation,useQueryClient } from "@tanstack/react-query";
+
 const initState = { pname: '', pdesc: '', price: 0, files: [] }
 const AddComponent = () => {
     const [product, setProduct] = useState({ ...initState })
     const [fetching, setFetching] = useState(false)
     const uploadRef = useRef() // 값 저장, 변경해도 렌더링 안 됨
-    const [result,setResult]=useState(null)
-    const {moveToList} =useCustomMove()
+    const [result, setResult] = useState(null)
+    const { moveToList } = useCustomMove()
     const handleChangeProduct = (e) => { // state를 통해 변경시마다 랜더링
         product[e.target.name] = e.target.value;
         setProduct({ ...product })
     }
+    
+    const addMutation = useMutation({
+        mutationFn: (product) => postAdd(product)
+    });
 
     const handleClickAdd = (e) => {
         const files = uploadRef.current.files
@@ -28,30 +34,46 @@ const AddComponent = () => {
         formData.append("pname", product.pname);
         formData.append("pdesc", product.pdesc);
         formData.append("price", product.price) // formData객체에 append
-        // console.log(formData);
 
+        addMutation.mutate(formData)
+        // console.log(formData);
+        /*
         setFetching(true)
         postAdd(formData).then(data => { // 폼데이터 전송시 로딩때 로디화면 출력
             setFetching(false) // 다끝난후 상태값을 변경해서 로딩창 없앰
             setResult(data.result);
-        })
+        })*/
 
     }
 
-    const closeModal=()=> {
-        setResult(null)
-        moveToList({page:1})
+    const queryClient=useQueryClient() 
+
+    const closeModal = () => {
+       // setResult(null)
+       queryClient.invalidateQueries("products/list")
+        moveToList({ page: 1 })
     }
 
 
 
 
     return (
-            <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-            {fetching ? <FetchingModal /> : <></>}
+        <div className="border-2 border-sky-200 mt-10 m-2 p-4">
+            {/*  {fetching ? <FetchingModal /> : <></>}
             {result? <ResultModal title={'Product Add Result'}
             content={`${result}번 등록 완료`}
-            callbackFn={closeModal}/>:<></>}
+            callbackFn={closeModal}/>:<></>} */}
+
+            {addMutation.isLoading ? <FetchingModal /> : <></>}
+
+            {addMutation.isSuccess ?
+                <ResultModal
+                    title={'Add Result'}
+                    content={`Add Success ${addMutation.data.result}`}
+                    callbackFn={closeModal}
+                /> : <></>
+            }
+
 
             <div className="border-2 border-sky-200 mt-10 m-2 p-4">
                 <div className="flex justify-center">
@@ -101,8 +123,8 @@ const AddComponent = () => {
                 </div>
 
             </div>
-            </div>
-            );
+        </div>
+    );
 }
 
-            export default AddComponent;
+export default AddComponent;

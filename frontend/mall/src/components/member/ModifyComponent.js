@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import { modifyMember } from "../../api/memberApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import ResultModal from "../common/ResultModal";
+
 const initState = { email: '', pw: '', nickname: '' }
  const ModifyComponent = () => {
     const [member, setMember] = useState(initState)
     const loginInfo = useSelector(state => state.loginSlice)
     const {moveToLogin}=useCustomLogin()
     const [result,setResult]=useState()
+    
     useEffect(() => {
         setMember({ ...loginInfo, pw: 'ABCD' })
     }, [loginInfo])
