@@ -4,6 +4,7 @@ import useCustomMove from "../../hooks/useCustomMove";
 import FetchingModal from "../common/FetchingModal";
 import { API_SERVER_HOST } from "../../api/todoApi";
 import PageComponent from "../common/PageComponent";
+import useCustomLogin from "../../hooks/useCustomLogin";
 const initState = { // 초기 데이터
     dtoList: [],
     pageNumList: [],
@@ -18,18 +19,18 @@ const initState = { // 초기 데이터
 }
 const host=API_SERVER_HOST
 const ListComponent = () => {
-
+  const {exceptionHandle}=useCustomLogin()
     const { page, size, refresh, moveToList, moveToRead } = useCustomMove()
     const [serverData, setServerData] = useState(initState)
     const [fetching, setFetching] = useState(false)
 
     useEffect(() => {
         setFetching(true)
-        getList({ page, size }).then(data => {
+        getList({ page, size }).then(data => { // getlist실행시, jwtutil부분에서 jwtAxios.interceptors.request.use(beforeReq, requestFail)실행해 로그인 되지 않앗다면 예외발생
             console.log(data)
             setServerData(data)
             setFetching(false) // 서버로부터 데이터 받아옴.
-        })
+        }).catch(err=>exceptionHandle(err))
     }, [page, size, refresh])
 return (
   <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">

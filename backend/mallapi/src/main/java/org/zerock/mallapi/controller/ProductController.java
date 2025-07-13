@@ -18,6 +18,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -51,6 +52,7 @@ public class ProductController {
         return fileUtil.getFile(fileName);
     }
     
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')") // 호출하려는 사용자가 ROLE_USER 또는 ROLE_ADMIN 권한을 가지고 있어야 허용한다는 뜻입니다.
     @GetMapping("/list")
     public PageResponseDTO<ProductDTO> list(PageRequestDTO pageRequestDTO) {
         log.info("list.............."+pageRequestDTO);
