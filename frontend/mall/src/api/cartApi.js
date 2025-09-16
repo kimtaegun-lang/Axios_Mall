@@ -12,4 +12,4 @@ export const postChangeCart = async (cartItem) => {
 
 const res = await jwtAxios.post(`${host}/change`, cartItem) 
 return res.data
-}
+} //
