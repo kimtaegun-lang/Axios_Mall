@@ -29,11 +29,12 @@ const ListComponent = () => {
     staleTime:1000*5
 });
 
-// const queryClient=useQueryClient() /* queryClient: React Query의 전역 클라이언트 객체 이걸 통해 캐시를 수동으로 무효화, 삭제, 갱신할 수 있어요 */
+ const queryClient=useQueryClient() /* queryClient: React Query의 전역 클라이언트 객체 이걸 통해 캐시를 수동으로 무효화, 삭제, 갱신할 수 있어요 */
 const handleClickPage=(pageParam)=> {
-  /*if(pageParam.page===parseInt(page)){ /* products/list 쿼리를 강제로 invalidate (무효화) 하여 데이터를 다시 요청함
-                                  즉, "같은 페이지지만 새로고침하고 싶을 때" 캐시 없이 다시 불러옴
-    queryClient.invalidateQueries("products/list")
+  /*
+  if(pageParam.page===parseInt(page)){ /* products/list 쿼리를 강제로 invalidate (무효화) 하여 데이터를 다시 요청함
+                                  즉, "같은 페이지지만 새로고침하고 싶을 때" 캐시 없이 다시 불러옴 
+    queryClient.invalidateQueries("products/list") 
   } */
   moveToList(pageParam)
 }

@@ -48,27 +48,24 @@ public class MemberServiceImpl implements MemberService {
         return memberDTO;
     }
 
+    // 카카오 페이지에서 회원 정보 받아오기
     private String getEmailFromKakaoAccessToken(String accessToken) {
         String kakaoGetUserURL = "https://kapi.kakao.com/v2/user/me";
         if (accessToken == null) {
             throw new RuntimeException("Access Token is null");
         }
-        RestTemplate restTemplate = new RestTemplate(); // Spring에서 제공하는 HTTP 통신 클라이언트예요. 외부 API(이 경우 카카오 API)에 요청을 보낼 때
-                                                        // 사용합니다.
+        RestTemplate restTemplate = new RestTemplate(); // Spring에서 제공하는 HTTP 통신 클라이언트 외부 API(이 경우 카카오 API)에 요청을 보낼 때 사용
+                                                 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-Type", "application/x-www-form-urlencoded"); // 폼 데이터 방식으로 요청한다는 의미
         HttpEntity<String> entity = new HttpEntity<>(headers); // 요청 본문 없이 헤더만 포함한 HTTP 요청 객체를 생성합니다.
         UriComponents uriBuilder = UriComponentsBuilder.fromUriString(kakaoGetUserURL).build(); // 요청할 URL을 생성합니다
-        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uriBuilder.toString(), HttpMethod.GET, entity, // 실제로
-                                                                                                                      // API를
-                                                                                                                      // 호출하는
-                                                                                                                      // 부분입니다.(exchange)
+        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uriBuilder.toString(), HttpMethod.GET, entity, 
                 LinkedHashMap.class); // 응답은 LinkedHashMap으로 받아옴 (JSON 구조가 Map처럼 오기 때문에)
 
         log.info(response);
-        LinkedHashMap<String, LinkedHashMap> bodyMap = response.getBody(); // 카카오에서 받은 사용자 정보는 JSON 형식인데 그걸 Map으로 받아서
-                                                                           // 가공하는 부분입니다.
+        LinkedHashMap<String, LinkedHashMap> bodyMap = response.getBody(); // 카카오에서 받은 사용자 정보는 JSON 형식인데 그걸 Map으로 받아서 가공
         log.info("	");
 
         log.info(bodyMap);
@@ -84,17 +81,17 @@ public class MemberServiceImpl implements MemberService {
             buffer.append((char) ((int) (Math.random() * 55) + 65));
         }
         return buffer.toString();
-        // 문자열을 여러 번 이어붙일 때 StringBuffer를 쓰는 이유는 문자열을 직접 더하면 매번 새로운 객체가 만들어져 비효율적이기
-        // 때문이에요.
+        // 문자열을 여러번 이어붙일 때 StringBuffer를 쓰는 이유는 문자열을 직접 더하면 매번 새로운 객체가 만들어져 비효율적이기 때문
     }
 
+    // 회원 생성 메소드
     private Member makeSocialMember(String email) {
         String tempPassword = makeTempPassword(); // 10개 난수
         log.info("tempPassword: " + tempPassword);
         String nickname = "소셜회원";
         Member member = Member.builder()
                 .email(email)
-                .pw(passwordEncoder.encode(tempPassword)) // 소셜 로그인시, 이메일만 필요하므로 비밀번호 난수를 직접 생성한듯?
+                .pw(passwordEncoder.encode(tempPassword)) // 소셜 로그인시, 이메일만 필요하므로 비밀번호 난수를 생성
                 .nickname(nickname)
                 .social(true)
                 .build();
@@ -102,6 +99,8 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    
+    // 멤버 수정
     @Override
     public void modifyMember(MemberModifyDTO memberModifyDTO) {
 

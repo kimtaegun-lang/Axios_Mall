@@ -21,7 +21,8 @@ public class CartController {
     private final CartService cartService;
 
     // 장바구니 수량 변경 혹은 삭제 요청 (수량 0 이하 시 삭제 처리)
-    @PreAuthorize("#itemDTO.email == authentication.name")
+    //@PreAuthorize("#itemDTO.email == authentication.name")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/change")
     public List<CartItemListDTO> changeCart(@RequestBody CartItemDTO itemDTO) {
         log.info("changeCart called with: " + itemDTO);

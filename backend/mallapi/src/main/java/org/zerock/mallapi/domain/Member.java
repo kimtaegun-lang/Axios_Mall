@@ -15,7 +15,7 @@ public class Member {
     private String email;
     private String pw;
     private String nickname;
-    private boolean social; //  구글, 카카오, 네이버, 페이스북 같은 소셜 계정으로 로그인한 사용자 인듯?
+    private boolean social; //  구글, 카카오, 네이버, 페이스북 같은 소셜 계정으로 로그인한 사용자
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default

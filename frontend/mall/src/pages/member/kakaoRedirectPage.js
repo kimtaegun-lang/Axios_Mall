@@ -7,7 +7,7 @@ import useCustomLogin from "../../hooks/useCustomLogin";
 const KakaoRedirectPage = () => {
 
     const [searchParams] = useSearchParams()
-    const {moveToPath}=useCustomLogin()
+    const {moveToPath,saveAsCookie}=useCustomLogin()
     const dispatch=useDispatch()
     const authCode = searchParams.get("code") // 카카오 인가코드 
     // OAuth 2.0 표준에서 인가 코드는 code라는 이름으로 전달됨
@@ -15,7 +15,8 @@ const KakaoRedirectPage = () => {
     useEffect(() => {
         getAccessToken(authCode).then(accessToken => {
             getMemberWithAccessToken(accessToken).then(memberInfo=>{
-                dispatch(login(memberInfo))
+              //  dispatch(login(memberInfo))
+              saveAsCookie(memberInfo);
                 if(memberInfo&&!memberInfo.social) { // 쇼셜 계정이 아닐경우,
                     moveToPath("/")
                 }

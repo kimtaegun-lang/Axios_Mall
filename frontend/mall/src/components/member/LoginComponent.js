@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { loginPostAsync } from "../../slices/loginSlice";
+import { login,loginPostAsync } from "../../slices/loginSlice";
 import { useNavigate } from "react-router-dom";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import KakaoLoginComponent from "./kakaoLoginComponent";
@@ -23,9 +23,9 @@ const LoginComponent = () => {
 
     const handleClickLogin = (e) => {
         doLogin(loginParam)
-        // dispatch(login(loginParam)) 동기화 호출
-       // dispatch(loginPostAsync(loginParam)) // 무언가 상태(state)를 변경해달라"**고 Redux에 명령하는 역할을 해요.
-           // .unwrap() // unwrap()을 통해 Promise 결과를 꺼낼 수 있어요.
+        dispatch(login(loginParam)) // 동기화 호출
+       dispatch(loginPostAsync(loginParam)) // redux에 상태 변경 요청을 함
+        .unwrap() // unwrap()을 통해 Promise 결과를 꺼냄
            .then(data => {
         
                 console.log(data)
@@ -36,7 +36,6 @@ const LoginComponent = () => {
                     navigate({pathname:`/`}, {replace:true})
                 }
             })
-        // loginSlice의 비동기 호출
     }
     return (
         <div className="border-2 border-sky-200 mt-10 m-2 p-4">

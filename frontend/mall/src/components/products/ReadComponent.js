@@ -16,7 +16,6 @@ const ReadComponent = ({ pno }) => {
     const [fetching, setFetching] = useState(false)
     const { changeCart, cartItems } = useCustomCart()
     const { loginState } = useCustomLogin()
-
     const {isFetching,data}=useQuery({ // 서버 데이터를 비동기적으로 가져오고, 로딩 상태, 오류, 캐싱 등 여러 상태를 자동으로 관리해주는 훅입니다.
         queryKey:['product',pno], // 이 쿼리를 구분하는 고유한 키입니다
         queryFn:()=>getOne(pno), // 실제로 서버에서 데이터를 가져오는 비동기 함수입니다.

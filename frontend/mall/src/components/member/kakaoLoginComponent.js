@@ -9,7 +9,7 @@ const KakaoLoginComponent = () => {
             <div className="flex justify-center	w-full">
                 <div
                     className="text-3xl text-center m-6 text-white font-extrabold w-3/4 bg-yellow-500 shadow-sm rounded p-2">
-                    <Link to={link}>KAKAO LOGIN</Link> {/*로그인 후에는 Redirect Uri 설정 경로로 이동하게 된다. 이때 쿼리스트링으로 인가 코드가 전달된다. */}
+                    <Link to={link}>KAKAO LOGIN</Link> {/* 브라우저가 해당 url으로 get요청을 보냄 */}
                 </div>
             </div>
         </div>

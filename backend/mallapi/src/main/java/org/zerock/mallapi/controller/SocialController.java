@@ -22,7 +22,7 @@ public class SocialController {
     private final MemberService memberService;
 
     @GetMapping("/api/member/kakao")
-    public Map<String, Object> getMemberFromKakao(String accessToken) {
+    public Map<String, Object> getMemberFromKakao(@RequestParam("accessToken") String accessToken) {
 
         log.info("access Token : " + accessToken);
         MemberDTO memberDTO = memberService.getKakaoMember(accessToken); // 로그인한 계정 memberdto객체

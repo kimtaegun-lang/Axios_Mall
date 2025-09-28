@@ -2,9 +2,9 @@ package org.zerock.mallapi.controller;
 
 import java.util.Map;
 
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce.Cluster.Refresh;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.mallapi.util.CustomJWTException;
 import org.zerock.mallapi.util.JWTUtil;
@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
 public class APIRefreshController { // 클라이언트가 가지고 있던 Access Token이 만료됐을 경우 Refresh Token을 통해 새로운 Access Token을 발급해주는 API.
 
     @RequestMapping("/api/member/refresh")
-    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader,String refreshToken) {
+    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader,@RequestParam("refreshToken") String refreshToken) {
 
         if (refreshToken == null) { // refreshToken이 널일경우,
             throw new CustomJWTException("NULL_REFRASH");

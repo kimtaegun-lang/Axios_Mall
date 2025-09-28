@@ -8,21 +8,22 @@ const initState = {
 const loadMemberCookie = () => {
     const memberInfo = getCookie("member")
     //닉네임 처리
-    if (memberInfo && memberInfo.nickname) { // 닉네임이 널값이라면 오류가 발생할 수 잇으므론
+    if (memberInfo && memberInfo.nickname) { 
+        // decodeURIComponent :URL에 사용된 인코딩(퍼센트 인코딩)을 다시 원래 문자열로 변환
         memberInfo.nickname = decodeURIComponent(memberInfo.nickname)
     }
-// 쿠키 객체 안에 nickname 필드가 있으면, URL 인코딩된 닉네임을 decodeURIComponent로 디코딩해 사람이 읽을 수 있게 바꿉니다.
     return memberInfo
 }
+
 // 서버에 로그인 요청을 보내는 비동기 thunk 함수
 export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
     return loginPost(param); // createAsyncThunk()를 사용해서 비동기 통신을 호출하는 함수
 });
 
-// thunk란?: 비동기 작업(예: 서버 요청)을 Redux 안에서 처리할 수 있도록 도와주는 미들웨어야.
+// thunk란?: 비동기 작업(예: 서버 요청)을 Redux 안에서 처리할 수 있도록 도와주는 미들웨어
 const loginSlice = createSlice({
     name: 'loginSlice',
-    initialState: loadMemberCookie()||initState, // 쿠키가 없다면 초기값 사용 초기 상태(state)를 설정하는 부분이에요.
+    initialState: loadMemberCookie()||initState,
     reducers: {
         login: (state, action) => { //  dispatch(login(memberInfo)) 여기서 action 호출
             // action.payload로 데이터 받은 후 return 시 ,state에 값 저장됨. 여기선 추가로 쿠키에도 저장

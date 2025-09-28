@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
     private final CustomFileUtil fileUtil;
     private final ProductService productService;
+    
+    
     @PostMapping(value="/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String,Long> register (@ModelAttribute ProductDTO productDTO) {
         log.info("register: "+productDTO);

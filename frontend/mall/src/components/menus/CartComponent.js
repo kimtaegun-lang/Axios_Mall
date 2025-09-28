@@ -4,12 +4,15 @@ import useCustomCart from "../../hooks/useCustomCart";
 import CartItemComponent from "../cart/CartItemComponent";
 import { getCartItemsAsync } from "../../slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useRecoilValue } from "recoil";
+import { cartTotalState } from "../../atoms/cartState";
+
 const CartComponent = () => {
     const { isLogin, loginState } = useCustomLogin();
-    const { refreshCart, cartItems, changeCart } = useCustomCart()
+    const {cartItems, changeCart } = useCustomCart()
     const dispatch = useDispatch()
-
-
+    const totalValue = useRecoilValue(cartTotalState)
+/*
     const total = useMemo(() => { // cartItems가 바뀔 때만 total을 다시 계산하고, 안 바뀌면 이전 계산값을 재사용하겠다.
         // useMemo: 랜더링때 실행
         let total = 0
@@ -26,7 +29,7 @@ const CartComponent = () => {
             //dispatch(getCartItemsAsync())
             refreshCart()
         }
-    }, [isLogin])
+    }, [isLogin]) */
     return (
         <div className="w-full">
             {isLogin ?
@@ -39,9 +42,9 @@ const CartComponent = () => {
                     </div>
 
                     <div>
-                        <div className="text-2xl text-right font-extrabold">
-                            TOTAL: {total}
+                        <div className="m-2 text-3xl "> TOTAL: {totalValue}
                         </div>
+
                         <ul> {cartItems.map(item => <CartItemComponent {...item} key={item.cino} changeCart={changeCart} email={loginState.email} />)}</ul>
                     </div>
                 </div>

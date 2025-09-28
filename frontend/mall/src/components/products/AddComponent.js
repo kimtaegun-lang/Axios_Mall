@@ -17,6 +17,8 @@ const AddComponent = () => {
         setProduct({ ...product })
     }
     
+    // 로딩 상태(isLoading), 성공 상태(isSuccess), **에러 상태(isError)**를 쉽게 관리
+    // 콜백(onSuccess, onError)으로 후속 처리도 간편
     const addMutation = useMutation({
         mutationFn: (product) => postAdd(product)
     });
@@ -34,7 +36,6 @@ const AddComponent = () => {
         formData.append("pname", product.pname);
         formData.append("pdesc", product.pdesc);
         formData.append("price", product.price) // formData객체에 append
-
         addMutation.mutate(formData)
         // console.log(formData);
         /*
