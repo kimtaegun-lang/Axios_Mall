@@ -1,20 +1,32 @@
-# 1. Node.js 기반 이미지 선택
-FROM node:18-alpine
+# 빌드 스테이지
+FROM node:18-alpine AS build
 
-# 2. 작업 디렉토리 설정
 WORKDIR /app
 
-# 3. 의존성 설치를 위한 package.json, package-lock.json 복사
-COPY package.json package-lock.json ./
+# package.json 복사 및 의존성 설치
+COPY package*.json ./
+RUN npm install
 
-# 4. 의존성 설치
-RUN npm ci
-
-# 5. 소스 코드 복사
+# 소스 코드 복사 및 빌드
 COPY . .
+RUN npm run build
 
-# 6. 앱 포트 노출
-EXPOSE 3000
+# 프로덕션 스테이지 (Nginx)
+FROM nginx:alpine
 
-# 7. 앱 실행
-CMD ["npm", "start"]
+# 빌드된 파일을 nginx로 복사
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Nginx 설정 (SPA용 - 선택사항)
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
